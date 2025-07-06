@@ -133,9 +133,42 @@
   <main>
     <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
       <!-- Your content -->
+       <h3 class = "text-lg font-bold mb-2"> Tambah Tugas Baru </h3>
+       <form action="{{route ('tasks.store') }}" method="POST" class="flex">
+            @csrf <input type="text" name="title" placeholder="Masukan Tugas Baru" class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm flex-grow mr-2">
+            <button type="submit" class="inline-flex items-center px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 focus:bg-gray-700 active:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150"> Tambah </button>
+       </form>
+    </div>
+      <!-- DAFTAR TUGAS  -->
+    <div>
+      <h3 style="text-align: center;" class="text-lg font-bold mb-2"> DAFTAR TUGAS </h3>
+      <div class="space-y-2">
+        @forelse ($tasks as $task) 
+        <div class="flex items-center justify-between p-3 bg-white rounded-lg shadow">
+          <div class="flex items-center">
+            <form action="{{ route('tasks.update', $task) }}" method="POST">
+                @csrf
+                @method('PATCH')
+                <input type="checkbox" name='completed' class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600" onchange="this.form.submit()" {{ $task->completed ? 'checked' : ''}}> 
+            </form>
+            <span class="ml-3 {{ $task->completed ? 'text-gray-500 line-through' : 'text-gray-800' }}">
+              {{ $task->title }} 
+            </span>
+          </div>
+          <div>
+            <form action="{{ route('tasks.destroy', $task) }}" method="POST">
+              @csrf
+              @method('DELETE')
+              <button type="submit" class="text-red-500 hover:text-red-700 text-sm font-semibold" onclick="return confirm('Anda Yakin Ingin Menghapus Tugas ini?')"> Hapus </button>
+            </form>
+          </div>
+        </div>
+        @empty
+          <p style="text-align: center;" class="text-gray-500"> Tugas Kosong </p> 
+        @endforelse
+      </div>
     </div>
   </main>
 </div>
-
 </body>
 </html>
